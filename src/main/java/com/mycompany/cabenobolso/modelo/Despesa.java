@@ -1,11 +1,15 @@
 package com.mycompany.cabenobolso.modelo;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-public abstract class Despesa {
+
+public abstract class Despesa implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String descricao;
     private long valorCentavos;
     private Set<Integer> participantes = new TreeSet<>();

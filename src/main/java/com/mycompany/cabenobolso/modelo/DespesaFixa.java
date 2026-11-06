@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class DespesaFixa extends Despesa {
+    private static final long serialVersionUID = 1L;
 
 
     public DespesaFixa(String descricao, long valorCentavos, Set<Integer> codigos) {

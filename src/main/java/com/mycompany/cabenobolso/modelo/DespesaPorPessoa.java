@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 public class DespesaPorPessoa extends Despesa {
+    private static final long serialVersionUID = 1L;
 
 
     public DespesaPorPessoa(String descricao, long valorCentavos, Set<Integer> codigos) {
