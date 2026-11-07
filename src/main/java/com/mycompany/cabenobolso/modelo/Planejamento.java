@@ -87,6 +87,38 @@ public class Planejamento implements Serializable {
         despesas.remove(indice);
     }
 
+    // ---------- Resumo do planejamento ----------
+
+    public Map<Integer, Long> calcularTotais() {
+        Map<Integer, Long> totais = new TreeMap<>();
+        for (int codigo : participantes.keySet()) {
+            totais.put(codigo, 0L);
+        }
+        for (Despesa d : despesas) {
+            for (Map.Entry<Integer, Long> e : d.ratear().entrySet()) {
+                totais.put(e.getKey(), totais.get(e.getKey()) + e.getValue());
+            }
+        }
+        return totais;
+    }
+
+    public long getCustoTotal() {
+        long soma = 0;
+        for (long valor : calcularTotais().values()) {
+            soma = soma + valor;
+        }
+        return soma;
+    }
+
+    public long calcularExcedente(int codigo) {
+        Participante p = buscarParticipante(codigo);
+        if (p == null) {
+            throw new IllegalArgumentException("Participante inexistente: " + codigo);
+        }
+        long total = calcularTotais().get(codigo);
+        return Math.max(0, total - p.getOrcamentoCentavos());
+    }
+
     // ---------- Consultas ----------
 
     public String getNome() {
