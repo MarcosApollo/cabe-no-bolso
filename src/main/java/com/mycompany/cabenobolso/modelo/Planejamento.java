@@ -40,6 +40,18 @@ public class Planejamento implements Serializable {
         return List.copyOf(participantes.values());
     }
 
+    public void excluirParticipante(int codigo) {
+        if (!participantes.containsKey(codigo)){
+            throw new IllegalArgumentException("Participante inexistente: " + codigo);
+        }
+        for (Despesa d : despesas) {
+            if (d.getParticipantes().contains(codigo)) {
+                throw new IllegalArgumentException("Participante possui despesas vinculadas: " + codigo);
+            }
+        }
+        participantes.remove(codigo);
+    }
+
     // ---------- Despesas ----------
 
     private void validarDespesa(Despesa d) {
