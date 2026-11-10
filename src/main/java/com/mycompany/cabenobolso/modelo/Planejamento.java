@@ -52,6 +52,25 @@ public class Planejamento implements Serializable {
         participantes.remove(codigo);
     }
 
+    public void alterarParticipante(int codigo, String novoNome, long novoOrcamentoCentavo) {
+        Participante p = buscarParticipante(codigo);
+
+        if (p == null) {
+            throw new IllegalArgumentException("Participante inexistente: " + codigo);
+        }
+
+        if (novoNome == null || novoNome.isBlank()) {
+            throw new IllegalArgumentException("Nome vazio");
+        }
+
+        if (novoOrcamentoCentavo < 0) {
+            throw new IllegalArgumentException("O orçamento não pode ser negativo");
+        }
+
+        p.setNome(novoNome);
+        p.setOrcamentoCentavos(novoOrcamentoCentavo);
+    }
+
     // ---------- Despesas ----------
 
     private void validarDespesa(Despesa d) {
@@ -117,6 +136,25 @@ public class Planejamento implements Serializable {
         }
         long total = calcularTotais().get(codigo);
         return Math.max(0, total - p.getOrcamentoCentavos());
+    }
+
+    public String consultarSituacaoOrcamento(int codigo) {
+        Participante p = buscarParticipante(codigo);
+
+        if (p == null) {
+            throw new IllegalArgumentException("Participante inexistente: " + codigo);
+        }
+
+        long total = calcularTotais().get(codigo);
+        long orcamento = p.getOrcamentoCentavos();
+
+        if (total > orcamento) {
+            return "Acima do orçamento";
+        } else if (total == orcamento) {
+            return "No limite do orçamento";
+        } else  {
+            return "Dentro do orçamento";
+        }
     }
 
     // ---------- Consultas ----------
