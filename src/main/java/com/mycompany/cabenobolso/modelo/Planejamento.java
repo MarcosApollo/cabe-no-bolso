@@ -166,4 +166,12 @@ public class Planejamento implements Serializable {
     public List<Despesa> getDespesas() {
         return List.copyOf(this.despesas);
     }
+
+    public void setParticipantes(Map<Integer, Participante> participantes) {
+        this.participantes = participantes;
+    }
+
+    public void setDespesas(List<Despesa> despesas) {
+        this.despesas = despesas;
+    }
 }

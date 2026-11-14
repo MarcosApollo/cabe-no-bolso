@@ -37,4 +37,8 @@ public abstract class Despesa implements Serializable {
     }
 
     public abstract Map<Integer, Long> ratear();
+
+    public void setParticipantes(Set<Integer> participantes) {
+        this.participantes = participantes;
+    }
 }

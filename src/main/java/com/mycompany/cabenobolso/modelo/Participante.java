@@ -33,14 +33,14 @@ public class Participante implements Serializable {
     }
 
     // Método Setter
-    public void setNome(String nome) {
+    public final void setNome(String nome) {
         if (nome == null || nome.isBlank()) {
             throw new IllegalArgumentException("Nome vazio");
         }
         this.nome = nome;
     }
 
-    public void setOrcamentoCentavos(long orcamentoCentavos) {
+    public final void setOrcamentoCentavos(long orcamentoCentavos) {
         if (orcamentoCentavos < 0) {
             throw new IllegalArgumentException("O orçamento não pode ser negativo");
         }
