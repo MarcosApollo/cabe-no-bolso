@@ -339,5 +339,22 @@ private Planejamento planejamento;
 
     // Método auxiliar privado para exibir janelas de alerta padrão ao usuário
     private void aviso(String msg) { JOptionPane.showMessageDialog(this, msg, "Atenção", JOptionPane.WARNING_MESSAGE); }
+
+    // Só para testar a tela isoladamente enquanto a janela principal não existe.
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            Planejamento plano = new Planejamento("Teste");
+            plano.cadastrarParticipante(new Participante(1, "Ana", 100000));
+            plano.cadastrarParticipante(new Participante(2, "Bruno", 50000));
+            plano.cadastrarParticipante(new Participante(3, "Carla", 50000));
+
+            JFrame janela = new JFrame("Cabe no Bolso - Despesas (teste)");
+            janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            janela.add(new TelaDespesas(plano));
+            janela.setSize(750, 500);
+            janela.setLocationRelativeTo(null);
+            janela.setVisible(true);
+        });
+    }
 // Fecha a declaração da classe TelaDespesas
 }
