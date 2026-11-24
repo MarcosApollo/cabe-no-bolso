@@ -30,6 +30,3 @@ nbproject/
 
 # Maven
 target/
-
-# Dados gerados pela aplicação
-*.dat
