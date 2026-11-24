@@ -2,6 +2,7 @@
 package view;
 
 // Importa todos os componentes visuais do Swing (JPanel, JButton, JTextField, JTable, etc.)
+
 import javax.swing.*;
 // Importa o modelo padrão de dados usado para controlar as linhas e colunas da JTable
 import javax.swing.table.DefaultTableModel;
@@ -69,12 +70,14 @@ public class TelaDespesas extends JPanel {
 
         // --- LINHA 0: CAMPO DESCRIÇÃO ---
         // Posiciona na coluna 0, linha 0
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         // Adiciona o rótulo de texto "Descrição:"
         painel.add(new JLabel("Descrição:"), gbc);
 
         // Posiciona na coluna 1 e dá peso 1.0 para o campo esticar quando a janela crescer
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         // Instancia a caixa de texto com largura base de 20 colunas
         txtDescricao = new JTextField(20);
         // Adiciona a caixa de texto ao painel
@@ -82,12 +85,15 @@ public class TelaDespesas extends JPanel {
 
         // --- LINHA 1: CAMPO VALOR ---
         // Volta para a coluna 0, desce para a linha 1 e reseta o peso de esticamento para 0
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
         // Adiciona o rótulo de texto "Valor (R$):"
         painel.add(new JLabel("Valor (R$):"), gbc);
 
         // Vai para a coluna 1 com peso 1.0 para esticar
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         // Instancia a caixa de texto do valor
         txtValor = new JTextField(10);
         // Adiciona a caixa de texto ao painel
@@ -95,12 +101,15 @@ public class TelaDespesas extends JPanel {
 
         // --- LINHA 2: CAIXA DE SELEÇÃO DE TIPO ---
         // Coluna 0, linha 2, sem esticar
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
         // Adiciona o rótulo "Tipo:"
         painel.add(new JLabel("Tipo:"), gbc);
 
         // Coluna 1, com esticamento horizontal
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         // Instancia o menu suspenso já preenchido com as duas opções exigidas no projeto
         cbTipo = new JComboBox<>(new String[]{"Fixa", "Por pessoa"});
         // Adiciona o menu suspenso ao painel
@@ -108,12 +117,15 @@ public class TelaDespesas extends JPanel {
 
         // --- LINHA 3: LISTA DE PARTICIPANTES ---
         // Coluna 0, linha 3, sem esticar
-        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.weightx = 0;
         // Adiciona o rótulo orientando o usuário a segurar CTRL para selecionar várias pessoas
         painel.add(new JLabel("Participantes (CTRL+Clique):"), gbc);
 
         // Coluna 1, com esticamento horizontal
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         // Instancia o modelo que armazenará os nomes dos participantes
         listModelParticipantes = new DefaultListModel<>();
         // Instancia a lista visual vinculada ao modelo acima
@@ -143,7 +155,9 @@ public class TelaDespesas extends JPanel {
         painelBotoes.add(btnLimpar);
 
         // Posiciona na coluna 0, linha 4, e faz ocupar 2 colunas de largura (gridwidth = 2)
-        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
         // Adiciona a barra de botões ao formulário
         painel.add(painelBotoes, gbc);
 
@@ -189,6 +203,8 @@ public class TelaDespesas extends JPanel {
                 // Copia o valor da coluna 3 (Valor) para o campo txtValor
                 txtValor.setText(tableModel.getValueAt(linha, 3).toString());
             }
-        });}}
+        });
+    }
+}
 
 // Adiciona um evento ao botão Limpar para apagar os campos quando clicado
