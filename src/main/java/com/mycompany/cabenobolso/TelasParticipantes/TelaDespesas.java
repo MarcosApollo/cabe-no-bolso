@@ -1,5 +1,6 @@
 // Define que esta classe pertence ao pacote 'telas' (camada visual do padrão MVC)
-package com.mycompany.cabenobolso.telas;
+package com.mycompany.cabenobolso.TelasParticipantes;
+
 
 // Importa todas as classes do pacote modelo (Planejamento, Despesa, DespesaFixa, DespesaPorPessoa, Participante)
 import com.mycompany.cabenobolso.modelo.*;
@@ -11,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 // Importa coleções para manipular listas e conjuntos de códigos de participantes
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -47,7 +49,7 @@ private Planejamento planejamento;
     // Construtor da classe: executado automaticamente quando 'new TelaDespesas()' é chamado
     // Construtor da classe: recebe o mesmo Planejamento usado nas outras telas do sistema
     public TelaDespesas(Planejamento planejamento) {
-        this.planejamento = planejamento;
+       this.planejamento = Objects.requireNonNull(planejamento, "Planejamento não pode ser nulo.");
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         add(criarPainelFormulario(), BorderLayout.NORTH);
@@ -227,21 +229,27 @@ private Planejamento planejamento;
         // Limpa os campos e desmarca a seleção da tabela
         limparCampos();
     }
-
-    // Método privado responsável por remover a despesa selecionada na tabela
+    // Remove a despesa selecionada após validação de seleção e confirmação do usuário
     private void excluir() {
-        // Obtém o índice da linha selecionada na tabela
         int linha = tabelaDespesas.getSelectedRow();
-        // Se nenhuma despesa estiver selecionada, avisa o usuário e interrompe
         if (linha < 0) { aviso("Selecione uma despesa para excluir."); return; }
-        // Remove a despesa correspondente do Planejamento
-        planejamento.excluirDespesa(linha);
-        // Atualiza a tabela visual removendo a linha excluída
-        atualizarTabela();
-        // Limpa os campos do formulário
-        limparCampos();
+        Despesa d = planejamento.getDespesas().get(linha);
+        int opcao = JOptionPane.showConfirmDialog(this, "Deseja excluir \"" + d.getDescricao() + "\"?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (opcao == JOptionPane.YES_OPTION) {
+            planejamento.excluirDespesa(linha);
+            atualizarTabela();
+            limparCampos();
+        }
     }
-           // Método público que carrega os participantes do planejamento na lista visual (JList)
+
+    // Método público para o Controller sincronizar participantes e despesas ao abrir a tela
+    public void atualizarTela() {
+        atualizarParticipantes();
+        atualizarTabela();
+    }
+
+    
+    // Método público que carrega os participantes do planejamento na lista visual (JList)
     public void atualizarParticipantes() {
         // Remove todos os itens atuais da lista para evitar duplicação
         listModelParticipantes.clear();
@@ -267,9 +275,25 @@ private Planejamento planejamento;
             // Converte o valor armazenado em centavos (long) para reais formatados com vírgula
             String valor = String.format("%.2f", d.getValorCentavos() / 100.0).replace(".", ",");
             // Adiciona uma nova linha na tabela com ID sequencial, descrição, tipo, valor e códigos dos participantes
-            tableModel.addRow(new Object[]{i + 1, d.getDescricao(), tipo, valor, d.getParticipantes()});
+            tableModel.addRow(new Object[]{i + 1, d.getDescricao(), tipo, valor, formatarParticipantes(d.getParticipantes())});
+
         }
     }
+    // Converte os códigos dos participantes em texto legível (ex: "1 (Ana), 2 (João)")
+private String formatarParticipantes(Set<Integer> codigos) {
+    StringBuilder sb = new StringBuilder();
+    for (Integer cod : codigos) {
+        for (Participante p : planejamento.getParticipantes()) {
+            if (p.getCodigo() == cod) {
+                if (sb.length() > 0) sb.append(", ");
+                sb.append(cod).append(" (").append(p.getNome()).append(")");
+                break;
+            }
+        }
+    }
+    return sb.toString();
+}
+
 
     // Método privado que valida os campos do formulário e cria o objeto Despesa correspondente
     private Despesa lerFormulario() {
@@ -277,17 +301,25 @@ private Planejamento planejamento;
         String desc = txtDescricao.getText().trim();
         // Valida se a descrição está vazia; se estiver, avisa e retorna null
         if (desc.isEmpty()) { aviso("Informe a descrição."); return null; }
-        // Variável que guardará o valor convertido em centavos
+                // Variável que guardará o valor convertido em centavos
         long valor;
         try {
-            // Troca vírgula por ponto, converte para double, multiplica por 100 e arredonda para centavos
-            valor = Math.round(Double.parseDouble(txtValor.getText().replace(",", ".")) * 100);
-        } catch (Exception e) {
-            // Caso o usuário digite letras ou formato inválido, exibe aviso e interrompe
-            aviso("Valor inválido."); return null;
+            // Remove pontos de milhar, troca vírgula por ponto e converte para centavos
+            String valorLimpo = txtValor.getText().trim().replace(".", "").replace(",", ".");
+            valor = Math.round(Double.parseDouble(valorLimpo) * 100);
+        } catch (NumberFormatException e) {
+            // Caso o usuário digite letras ou formato inválido, exibe aviso e foca o campo
+            aviso("Valor inválido.");
+            txtValor.requestFocus();
+            return null;
         }
         // Impede valores negativos ou iguais a zero
-        if (valor <= 0) { aviso("O valor deve ser maior que zero."); return null; }
+        if (valor <= 0) {
+            aviso("O valor deve ser maior que zero.");
+            txtValor.requestFocus();
+            return null;
+        }
+
         // Cria um conjunto ordenado (TreeSet) para armazenar os códigos dos participantes selecionados
         Set<Integer> cods = new TreeSet<>();
         // Percorre cada item selecionado pelo usuário na lista visual de participantes
